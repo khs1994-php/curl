@@ -35,7 +35,12 @@ class Curl
     {
         $header = ['content-type: application/x-www-form-urlencoded;charset=UTF-8'];
 
-        $this->setUrl($url.'?'.$data);
+        if ($data) {
+            $this->setUrl($url.'?'.$data);
+        } else {
+            $this->setUrl($url);
+        }
+
         $this->setHeader($header);
 
         return $this->exec();
