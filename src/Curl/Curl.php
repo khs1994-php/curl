@@ -31,6 +31,19 @@ class Curl
         $this->setOpt(CURLOPT_HTTPHEADER, $header);
     }
 
+    public function setCA(string $ca)
+    {
+        $this->setOpt(CURLOPT_CAINFO, './config/ssl/ca.pem');
+    }
+
+    public function docker(string $ca, string $key, string $cert)
+    {
+        $this->setOpt(CURLOPT_SSL_VERIFYPEER, 1);
+        $this->setOpt(CURLOPT_CAINFO, $ca);
+        $this->setOpt(CURLOPT_SSLKEY, $key);
+        $this->setOpt(CURLOPT_SSLCERT, $cert);
+    }
+
     public function get(string $url=null, string $data = null)
     {
         $header = ['content-type: application/x-www-form-urlencoded;charset=UTF-8'];
