@@ -39,10 +39,9 @@ class Curl
 
     public function setUrl(string $url = null)
     {
-        if (!$this->url) {
-            $this->url = $url;
+        if ($url) {
+            $this->setOpt(CURLOPT_URL, $url);
         }
-        $this->setOpt(CURLOPT_URL, $this->url);
     }
 
     public function setHeader(string $name, string $value)
@@ -129,14 +128,11 @@ class Curl
     public function exec()
     {
         $output = curl_exec($this->ch);
-
         $errorCode = curl_errno($this->ch);
         $errorMssage = curl_error($this->ch);
 
-        curl_close($this->ch);
-
         if ($errorCode) {
-            return [$errorCode => $errorMssage];
+            throw new \Error($errorMssage, $errorCode);
         }
 
         return $output;
@@ -159,5 +155,10 @@ class Curl
     public function __toString()
     {
         return $this->get($this->url);
+    }
+
+    public function __destruct()
+    {
+        curl_close($this->ch);
     }
 }
