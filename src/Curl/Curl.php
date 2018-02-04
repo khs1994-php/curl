@@ -12,9 +12,9 @@ class Curl
 
     public $ch;
 
-    private $headers=[];
+    private $headers = [];
 
-    public function __construct(string $url= null)
+    public function __construct(string $url = null)
     {
         $this->ch = curl_init();
         $this->setUrl($url);
@@ -32,25 +32,25 @@ class Curl
         curl_setopt($this->ch, $opt, $value);
     }
 
-    public function setOptArray(array $array=[])
+    public function setOptArray(array $array = [])
     {
         curl_setopt_array($this->ch, $array);
     }
 
-    public function setUrl(string $url=null)
+    public function setUrl(string $url = null)
     {
         if (!$this->url) {
-            $this->url=$url;
+            $this->url = $url;
         }
         $this->setOpt(CURLOPT_URL, $this->url);
     }
 
     public function setHeader(string $name, string $value)
     {
-        $this->headers[$name]=$value;
-        $headers=[];
+        $this->headers[$name] = $value;
+        $headers = [];
         foreach ($this->headers as $key => $value) {
-            $headers[]=$name.':'.$value;
+            $headers[] = $name.':'.$value;
         }
 
         $this->setOpt(CURLOPT_HTTPHEADER, $headers);
@@ -63,62 +63,80 @@ class Curl
 
     // Support Docker Daemon TLS
 
-    public function docker(string $ca, string $key, string $cert)
+    public function docker($cert_path)
     {
         $this->setOpt(CURLOPT_SSL_VERIFYPEER, 1);
-        $this->setOpt(CURLOPT_CAINFO, $ca);
-        $this->setOpt(CURLOPT_SSLKEY, $key);
-        $this->setOpt(CURLOPT_SSLCERT, $cert);
+        $this->setOpt(CURLOPT_CAINFO, $cert_path.'/ca.pem');
+        $this->setOpt(CURLOPT_SSLKEY, $cert_path.'/key.pem');
+        $this->setOpt(CURLOPT_SSLCERT, $cert_path.'/cert.pem');
     }
 
-    public function get(string $url=null, string $data = null)
+    public function get(string $url = null, string $data = null, array $header = [])
     {
-        if ($data) {
-            $this->setUrl($url.'?'.$data);
+        $url = $data ? $url.'?'.$data : $url;
+        $this->setUrl($url);
+        if ($header) {
+            foreach ($header as $key => $value) {
+                $this->setHeader($key, $value);
+            }
         } else {
-            $this->setUrl($url);
+            $this->setHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
         }
-
-        $this->setHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
 
         return $this->exec();
     }
 
-    public function post(string $url=null, string $data = null)
+    public function post(string $url = null, string $data = null, array $header = [])
     {
         $this->setUrl($url);
-        $this->setHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+        if ($header) {
+            foreach ($header as $key => $value) {
+                $this->setHeader($key, $value);
+            }
+        } else {
+            $this->setHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+        }
         $this->setOpt(CURLOPT_POST, 1);
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
 
         return $this->exec();
     }
 
-    public function delete(string $url)
+    public function delete(string $url, string $data)
     {
-        # code...
+        $this->setUrl($url);
+        $this->setOpt(CURLOPT_CUSTOMREQUEST, 'DELETE');
+        $this->setOpt(CURLOPT_POSTFIELDS, $data);
+        return $this->exec();
     }
 
-    public function patch(string $url)
+    public function patch(string $url, string $data)
     {
-        # code...
+        $this->setUrl($url);
+        $this->setOpt(CURLOPT_CUSTOMREQUEST, 'PATCH');
+        $this->setOpt(CURLOPT_POSTFIELDS, $data);
+        return $this->exec();
     }
 
-    public function put(string $url)
+    public function put(string $url, string $data)
     {
+        $this->setUrl($url);
+        $this->setOpt(CURLOPT_CUSTOMREQUEST, 'PUT');
+        $this->setOpt(CURLOPT_POSTFIELDS, $data);
+        return $this->exec();
     }
 
     public function exec()
     {
         $output = curl_exec($this->ch);
 
-        $errorCode=curl_errno($this->ch);
-        $errorMssage=curl_error($this->ch);
+        $errorCode = curl_errno($this->ch);
+        $errorMssage = curl_error($this->ch);
 
         curl_close($this->ch);
 
         if ($errorCode) {
-            return [$errorCode=>$errorMssage];
+            return [$errorCode => $errorMssage];
         }
 
         return $output;
@@ -131,7 +149,7 @@ class Curl
 
     // 魔术方法，把对象当做函数调用
 
-    public function __invoke(string $url=null, string $data=null)
+    public function __invoke(string $url = null, string $data = null)
     {
         return $this->get($url, $data);
     }
