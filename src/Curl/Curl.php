@@ -78,22 +78,18 @@ class Curl
             foreach ($header as $key => $value) {
                 $this->setHeader($key, $value);
             }
-        } else {
-            $this->setHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
         }
 
         return $this->exec();
     }
 
-    public function post(string $url = null, string $data = null, array $header = [])
+    public function post(string $url = null, $data = null, array $header = [])
     {
         $this->setUrl($url);
         if ($header) {
             foreach ($header as $key => $value) {
                 $this->setHeader($key, $value);
             }
-        } else {
-            $this->setHeader('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
         }
         $this->setOpt(CURLOPT_POST, 1);
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
