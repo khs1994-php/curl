@@ -1,8 +1,15 @@
 <?php
 
-use Curl\Curl;
-use PHPUnit\Framework\TestCase;
+namespace Curl\Tests;
 
-class CurlTest extends TestCase
+use Curl\Error\CurlError;
+
+class CurlTest extends CurlTestCase
 {
+    /**
+     * @throws CurlError
+     */
+    public function testGet()
+    {
+    }
 }
