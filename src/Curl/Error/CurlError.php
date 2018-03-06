@@ -15,4 +15,17 @@ class CurlError extends \Error
         $this->message = $message;
         $this->code = $code;
     }
+
+    public function getErrorAsJson()
+    {
+        return json_encode($this->getErrorAsArray());
+    }
+
+    public function getErrorAsArray()
+    {
+        return [
+        'ret' => $this->code,
+        'message' => $this->message,
+      ];
+    }
 }

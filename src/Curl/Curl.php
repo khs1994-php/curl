@@ -33,6 +33,10 @@ class Curl
         $this->setTimeout(self::TIMEOUT);
         $this->setUserAgent(null);
         /**
+         * 根据服务器返回 HTTP 头中的 "Location: " 重定向
+         */
+        $this->setOpt(CURLOPT_FOLLOWLOCATION, 1);
+        /**
          * http2
          *
          * @since 7.0.7
@@ -50,6 +54,17 @@ class Curl
     public function enableHttp2(): void
     {
         $this->setOpt(CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
+    }
+
+    /**
+     * 设置 htpasswd
+     *
+     * @param string $username
+     * @param string $password
+     */
+    public function setHtpasswd(string $username, string $password): void
+    {
+        $this->setOpt(CURLOPT_USERPWD, $username.':'.$password);
     }
 
     /**
@@ -330,6 +345,8 @@ class Curl
      */
     public function __destruct()
     {
-        curl_close($this->ch);
+        if (is_resource($this->ch)) {
+            curl_close($this->ch);
+        }
     }
 }
