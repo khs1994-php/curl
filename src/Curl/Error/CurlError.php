@@ -6,8 +6,8 @@ use Throwable;
 
 class CurlError extends \Error
 {
-    public $message;
-    public $code;
+    protected $message;
+    protected $code;
 
     public function __construct(string $message = "", int $code = 0, Throwable $previous = null)
     {
@@ -24,8 +24,8 @@ class CurlError extends \Error
     public function getErrorAsArray()
     {
         return [
-        'ret' => $this->code,
-        'message' => $this->message,
-      ];
+            'ret' => $this->code,
+            'message' => $this->message,
+        ];
     }
 }
