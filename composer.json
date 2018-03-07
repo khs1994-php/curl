@@ -2,12 +2,8 @@
   "name": "khs1994/curl",
   "description": "curl SDK",
   "keywords": [
-    "chinese",
-    "shanxi",
-    "datong",
-    "khs1994",
     "curl",
-    "SDK"
+    "sdk"
   ],
   "homepage": "https://github.com/khs1994-php/curl",
   "type": "library",
@@ -20,7 +16,9 @@
     }
   ],
   "require": {
-    "php": ">=7.1"
+    "php": ">=7.1",
+    "ext-curl": "*",
+    "ext-json": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "~7.0"
