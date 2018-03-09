@@ -4,6 +4,14 @@
 
 ## Installation
 
+To Use Curl SDK, simply:
+
+```bash
+$ composer require khs1994/curl
+```
+
+For latest commit version:
+
 ```bash
 $ composer require khs1994/curl @dev
 ```
