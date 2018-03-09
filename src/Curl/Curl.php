@@ -17,7 +17,7 @@ class Curl
     private $headers = [];
 
     /**
-     * 构造函数
+     * 构造函数.
      *
      * @param string|null $url
      * @param bool        $http2
@@ -26,17 +26,17 @@ class Curl
     {
         $this->ch = curl_init();
         $this->setUrl($url);
-        /**
+        /*
          * 获取的信息以字符串返回，而不是直接输出
          */
         $this->setOpt(CURLOPT_RETURNTRANSFER, 1);
         $this->setTimeout(self::TIMEOUT);
         $this->setUserAgent(null);
-        /**
+        /*
          * 根据服务器返回 HTTP 头中的 "Location: " 重定向
          */
         $this->setOpt(CURLOPT_FOLLOWLOCATION, 1);
-        /**
+        /*
          * http2
          *
          * @since 7.0.7
@@ -47,7 +47,7 @@ class Curl
     }
 
     /**
-     * 启用 HTTP2
+     * 启用 HTTP2.
      *
      * @since 7.0.7
      */
@@ -57,7 +57,7 @@ class Curl
     }
 
     /**
-     * 设置 htpasswd
+     * 设置 htpasswd.
      *
      * @param string $username
      * @param string $password
@@ -68,7 +68,7 @@ class Curl
     }
 
     /**
-     * 超时设置
+     * 超时设置.
      *
      * @param int $sec
      */
@@ -78,13 +78,13 @@ class Curl
     }
 
     /**
-     * 设置 User-Agent
+     * 设置 User-Agent.
      *
      * @param string $userAgent
      */
     public function setUserAgent(?string $userAgent): void
     {
-        /**
+        /*
          *  在 HTTP 请求中包含一个 "User-Agent: " 头的字符串。
          */
         if ($userAgent) {
@@ -99,7 +99,7 @@ class Curl
     }
 
     /**
-     * 设置 curl 选项
+     * 设置 curl 选项.
      *
      * @param string $opt
      * @param        $value
@@ -110,7 +110,7 @@ class Curl
     }
 
     /**
-     * 以数组形式设置 curl
+     * 以数组形式设置 curl.
      *
      * @param array $array
      */
@@ -120,7 +120,7 @@ class Curl
     }
 
     /**
-     * 设置 URL
+     * 设置 URL.
      *
      * @param string|null $url
      */
@@ -133,7 +133,7 @@ class Curl
     }
 
     /**
-     * 设置 header
+     * 设置 header.
      *
      * @param string $name
      * @param string $value
@@ -150,7 +150,7 @@ class Curl
     }
 
     /**
-     * 设置 CA 根证书
+     * 设置 CA 根证书.
      *
      * @param string $ca
      */
@@ -160,46 +160,45 @@ class Curl
     }
 
     /**
-     * 原生支持 Docker TLS
+     * 原生支持 Docker TLS.
      *
      * Support Docker Daemon TLS
+     *
      * @param string $cert_path
      */
     public function docker(string $cert_path): void
     {
-        /**
+        /*
          * 下面两个参数为默认值，安全原因，严禁修改此项
          */
         $this->setOpt(CURLOPT_SSL_VERIFYPEER, 1);
         $this->setOpt(CURLOPT_SSL_VERIFYHOST, 2);
         $this->setOpt(CURLOPT_SSL_VERIFYSTATUS, 1);
         $this->setOpt(CURLOPT_CAINFO, $cert_path.'/ca.pem');
-        /**
+        /*
          * 一个包含 SSL 私钥的文件名
          */
         $this->setOpt(CURLOPT_SSLKEY, $cert_path.'/key.pem');
-        /**
+        /*
          * 一个包含 PEM 格式证书的文件名
          */
         $this->setOpt(CURLOPT_SSLCERT, $cert_path.'/cert.pem');
     }
 
-    /**
-     *
-     */
     public function cookie(): void
     {
-
     }
 
     /**
-     * get 方法
+     * get 方法.
      *
      * @param string|null $url
      * @param string|null $data
      * @param array       $header
-     * @return mixed
+     *
      * @throws CurlError
+     *
+     * @return mixed
      */
     public function get(string $url = null, string $data = null, array $header = [])
     {
@@ -216,12 +215,15 @@ class Curl
     }
 
     /**
-     * post 方法
+     * post 方法.
+     *
      * @param string|null $url
      * @param null        $data
      * @param array       $header
-     * @return mixed
+     *
      * @throws CurlError
+     *
+     * @return mixed
      */
     public function post(string $url = null, $data = null, array $header = [])
     {
@@ -238,17 +240,19 @@ class Curl
     }
 
     /**
-     * delete 方法
+     * delete 方法.
      *
      * @param string $url
      * @param string $data
-     * @return mixed
+     *
      * @throws CurlError
+     *
+     * @return mixed
      */
     public function delete(string $url, string $data)
     {
         $this->setUrl($url);
-        /**
+        /*
          * HTTP 请求时，使用自定义的 Method 来代替 "GET" 或 "HEAD"。对 "DELETE" 或者其他更隐蔽的 HTTP 请求有用
          */
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'DELETE');
@@ -258,12 +262,14 @@ class Curl
     }
 
     /**
-     * patch 方法
+     * patch 方法.
      *
      * @param string $url
      * @param string $data
-     * @return mixed
+     *
      * @throws CurlError
+     *
+     * @return mixed
      */
     public function patch(string $url, string $data)
     {
@@ -275,12 +281,14 @@ class Curl
     }
 
     /**
-     * put 方法
+     * put 方法.
      *
      * @param string $url
      * @param string $data
-     * @return mixed
+     *
      * @throws CurlError
+     *
+     * @return mixed
      */
     public function put(string $url, string $data)
     {
@@ -292,8 +300,9 @@ class Curl
     }
 
     /**
-     * @return mixed
      * @throws CurlError
+     *
+     * @return mixed
      */
     public function exec()
     {
@@ -310,6 +319,7 @@ class Curl
 
     /**
      * @param $name
+     *
      * @return mixed
      */
     public function __get($name)
@@ -318,12 +328,14 @@ class Curl
     }
 
     /**
-     * 魔术方法，把对象当做函数调用
+     * 魔术方法，把对象当做函数调用.
      *
      * @param string|null $url
      * @param string|null $data
-     * @return mixed
+     *
      * @throws CurlError
+     *
+     * @return mixed
      */
     public function __invoke(string $url = null, string $data = null)
     {
@@ -331,7 +343,7 @@ class Curl
     }
 
     /**
-     * 魔术方法，把对象当字符串，该方法不接受参数
+     * 魔术方法，把对象当字符串，该方法不接受参数.
      *
      * @throws CurlError
      */
@@ -341,7 +353,7 @@ class Curl
     }
 
     /**
-     * 析构函数
+     * 析构函数.
      */
     public function __destruct()
     {
