@@ -193,14 +193,14 @@ class Curl
      * get 方法.
      *
      * @param string|null $url
-     * @param string|null $data
+     * @param             $data
      * @param array       $header
      *
      * @throws CurlError
      *
      * @return mixed
      */
-    public function get(string $url = null, string $data = null, array $header = [])
+    public function get(string $url = null, $data = null, array $header = [])
     {
         $url = $data ? $url.'?'.$data : $url;
         $this->url = $url;
@@ -218,7 +218,7 @@ class Curl
      * post 方法.
      *
      * @param string|null $url
-     * @param null        $data
+     * @param             $data
      * @param array       $header
      *
      * @throws CurlError
@@ -243,13 +243,13 @@ class Curl
      * delete 方法.
      *
      * @param string $url
-     * @param string $data
+     * @param        $data
      *
      * @throws CurlError
      *
      * @return mixed
      */
-    public function delete(string $url, string $data)
+    public function delete(string $url, $data = null)
     {
         $this->setUrl($url);
         /*
@@ -265,13 +265,13 @@ class Curl
      * patch 方法.
      *
      * @param string $url
-     * @param string $data
+     * @param        $data
      *
      * @throws CurlError
      *
      * @return mixed
      */
-    public function patch(string $url, string $data)
+    public function patch(string $url, $data = null)
     {
         $this->setUrl($url);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'PATCH');
@@ -284,13 +284,13 @@ class Curl
      * put 方法.
      *
      * @param string $url
-     * @param string $data
+     * @param        $data
      *
      * @throws CurlError
      *
      * @return mixed
      */
-    public function put(string $url, string $data)
+    public function put(string $url, $data = null)
     {
         $this->setUrl($url);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'PUT');
