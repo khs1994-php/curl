@@ -328,21 +328,6 @@ class Curl
     }
 
     /**
-     * 魔术方法，把对象当做函数调用.
-     *
-     * @param string|null $url
-     * @param string|null $data
-     *
-     * @throws CurlError
-     *
-     * @return mixed
-     */
-    public function __invoke(string $url = null, string $data = null)
-    {
-        return $this->get($url, $data);
-    }
-
-    /**
      * 魔术方法，把对象当字符串，该方法不接受参数.
      *
      * @throws CurlError
