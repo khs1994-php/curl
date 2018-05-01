@@ -210,6 +210,8 @@ class Curl
                 $this->setHeader($key, $value);
             }
         }
+        
+        $this->setOpt(CURLOPT_CUSTOMREQUEST, 'GET');
 
         return $this->exec();
     }
