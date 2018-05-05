@@ -2,7 +2,7 @@
 
 namespace Curl;
 
-use Curl\Error\CurlError;
+use Exception;
 
 class Curl
 {
@@ -196,9 +196,8 @@ class Curl
      * @param             $data
      * @param array       $header
      *
-     * @throws CurlError
-     *
      * @return mixed
+     * @throws Exception
      */
     public function get(string $url = null, $data = null, array $header = [])
     {
@@ -210,7 +209,7 @@ class Curl
                 $this->setHeader($key, $value);
             }
         }
-        
+
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'GET');
 
         return $this->exec();
@@ -223,9 +222,8 @@ class Curl
      * @param             $data
      * @param array       $header
      *
-     * @throws CurlError
-     *
      * @return mixed
+     * @throws Exception
      */
     public function post(string $url = null, $data = null, array $header = [])
     {
@@ -248,9 +246,8 @@ class Curl
      * @param string $url
      * @param        $data
      *
-     * @throws CurlError
-     *
      * @return mixed
+     * @throws Exception
      */
     public function delete(string $url, $data = null)
     {
@@ -270,9 +267,8 @@ class Curl
      * @param string $url
      * @param        $data
      *
-     * @throws CurlError
-     *
      * @return mixed
+     * @throws Exception
      */
     public function patch(string $url, $data = null)
     {
@@ -289,9 +285,8 @@ class Curl
      * @param string $url
      * @param        $data
      *
-     * @throws CurlError
-     *
      * @return mixed
+     * @throws Exception
      */
     public function put(string $url, $data = null)
     {
@@ -303,18 +298,18 @@ class Curl
     }
 
     /**
-     * @throws CurlError
-     *
      * @return mixed
+     * @throws Exception
      */
     public function exec()
     {
         $output = curl_exec($this->ch);
+        $this->headers = [];
         $errorCode = curl_errno($this->ch);
         $errorMessage = curl_error($this->ch);
 
         if ($errorCode) {
-            throw new CurlError($errorMessage, $errorCode);
+            throw new Exception($errorMessage, $errorCode);
         }
 
         return $output;
@@ -333,7 +328,8 @@ class Curl
     /**
      * 魔术方法，把对象当字符串，该方法不接受参数.
      *
-     * @throws CurlError
+     * @return mixed
+     * @throws Exception
      */
     public function __toString()
     {
