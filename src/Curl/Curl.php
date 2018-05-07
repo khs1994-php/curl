@@ -16,13 +16,16 @@ class Curl
 
     private $headers = [];
 
+    private $construct_header = [];
+
     /**
      * 构造函数.
      *
      * @param string|null $url
      * @param bool        $http2
+     * @param array       $header
      */
-    public function __construct(string $url = null, bool $http2 = false)
+    public function __construct(string $url = null, bool $http2 = false, array $header = [])
     {
         $this->ch = curl_init();
         $this->setUrl($url);
@@ -43,6 +46,10 @@ class Curl
          */
         if ($http2) {
             $this->setOpt(CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
+        }
+
+        if ($header) {
+            $this->construct_header = $header;
         }
     }
 
@@ -141,6 +148,15 @@ class Curl
     public function setHeader(string $name, string $value): void
     {
         $this->headers[$name] = $value;
+
+        $construct_header = $this->construct_header;
+
+        if ($construct_header) {
+            foreach ($construct_header as $k => $v) {
+                $this->headers[$k] = $v;
+            }
+        }
+
         $headers = [];
         foreach ($this->headers as $key => $value) {
             $headers[] = $key.':'.$value;
