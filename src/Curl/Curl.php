@@ -50,6 +50,7 @@ class Curl
 
         if ($header) {
             $this->construct_header = $header;
+            $this->setHeader(null, null);
         }
     }
 
@@ -145,7 +146,7 @@ class Curl
      * @param string $name
      * @param string $value
      */
-    public function setHeader(string $name, string $value): void
+    public function setHeader(?string $name, ?string $value): void
     {
         $this->headers[$name] = $value;
 
