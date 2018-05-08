@@ -227,6 +227,8 @@ class Curl
             }
         }
 
+        $this->setHeader(null, null);
+
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'GET');
 
         return $this->exec();
@@ -250,6 +252,7 @@ class Curl
                 $this->setHeader($key, $value);
             }
         }
+        $this->setHeader(null, null);
         $this->setOpt(CURLOPT_POST, 1);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'POST');
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
@@ -274,7 +277,7 @@ class Curl
          */
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'DELETE');
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
-
+        $this->setHeader(null, null);
         return $this->exec();
     }
 
@@ -292,7 +295,7 @@ class Curl
         $this->setUrl($url);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'PATCH');
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
-
+        $this->setHeader(null, null);
         return $this->exec();
     }
 
@@ -310,7 +313,7 @@ class Curl
         $this->setUrl($url);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'PUT');
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
-
+        $this->setHeader(null, null);
         return $this->exec();
     }
 
