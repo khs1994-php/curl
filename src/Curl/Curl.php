@@ -168,8 +168,8 @@ class Curl
 
         $headers = [];
 
-        if(!$this->headers){
-          return;
+        if (!$this->headers) {
+            return;
         }
 
         foreach ($this->headers as $key => $value) {
@@ -227,6 +227,7 @@ class Curl
      * @param array       $header
      *
      * @return mixed
+     *
      * @throws Exception
      */
     public function get(string $url = null, $data = null, array $header = [])
@@ -255,6 +256,7 @@ class Curl
      * @param array       $header
      *
      * @return mixed
+     *
      * @throws Exception
      */
     public function post(string $url = null, $data = null, array $header = [])
@@ -280,6 +282,7 @@ class Curl
      * @param        $data
      *
      * @return mixed
+     *
      * @throws Exception
      */
     public function delete(string $url, $data = null)
@@ -291,6 +294,7 @@ class Curl
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'DELETE');
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
         $this->setHeader(null, null);
+
         return $this->exec();
     }
 
@@ -301,6 +305,7 @@ class Curl
      * @param        $data
      *
      * @return mixed
+     *
      * @throws Exception
      */
     public function patch(string $url, $data = null)
@@ -309,6 +314,7 @@ class Curl
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'PATCH');
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
         $this->setHeader(null, null);
+
         return $this->exec();
     }
 
@@ -319,6 +325,7 @@ class Curl
      * @param        $data
      *
      * @return mixed
+     *
      * @throws Exception
      */
     public function put(string $url, $data = null)
@@ -327,18 +334,20 @@ class Curl
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'PUT');
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
         $this->setHeader(null, null);
+
         return $this->exec();
     }
 
     /**
      * @return mixed
+     *
      * @throws Exception
      */
     public function exec()
     {
         $output = curl_exec($this->ch);
         $this->headers = [];
-        $this->info=curl_getinfo($this->ch);
+        $this->info = curl_getinfo($this->ch);
         $errorCode = curl_errno($this->ch);
         $errorMessage = curl_error($this->ch);
 
@@ -353,24 +362,28 @@ class Curl
         return ltrim($output, $this->responseHeaders);
     }
 
-    public function getInfo(){
+    public function getInfo()
+    {
         return $this->info;
     }
 
-    public function getCode(){
-       $array = $this->info;
+    public function getCode()
+    {
+        $array = $this->info;
 
-       return $array['http_code'];
+        return $array['http_code'];
     }
 
-    public function getRequestHeaders(){
-      $array = $this->info;
+    public function getRequestHeaders()
+    {
+        $array = $this->info;
 
-      return trim($array['request_header']);
+        return trim($array['request_header']);
     }
 
-    public function getResponseHeaders(){
-      return $this->responseHeaders;
+    public function getResponseHeaders()
+    {
+        return $this->responseHeaders;
     }
 
     /**
@@ -387,6 +400,7 @@ class Curl
      * 魔术方法，把对象当字符串，该方法不接受参数.
      *
      * @return mixed
+     *
      * @throws Exception
      */
     public function __toString()
