@@ -14,9 +14,13 @@ class Curl
 
     public $ch;
 
+    private $info;
+
     private $headers = [];
 
     private $construct_header = [];
+
+    private $responseHeaders;
 
     /**
      * 构造函数.
@@ -29,16 +33,20 @@ class Curl
     {
         $this->ch = curl_init();
         $this->setUrl($url);
-        /*
-         * 获取的信息以字符串返回，而不是直接输出
-         */
+
+        // 获取的信息以字符串返回，而不是直接输出
+
         $this->setOpt(CURLOPT_RETURNTRANSFER, 1);
         $this->setTimeout(self::TIMEOUT);
         $this->setUserAgent(null);
-        /*
-         * 根据服务器返回 HTTP 头中的 "Location: " 重定向
-         */
+
+        // 根据服务器返回 HTTP 头中的 "Location: " 重定向
+
         $this->setOpt(CURLOPT_FOLLOWLOCATION, 1);
+        // 获取请求头
+        $this->setOpt(CURLINFO_HEADER_OUT, true);
+        // 获取响应头
+        $this->setOpt(CURLOPT_HEADER, 1);
         /*
          * http2
          *
@@ -159,6 +167,11 @@ class Curl
         }
 
         $headers = [];
+
+        if(!$this->headers){
+          return;
+        }
+
         foreach ($this->headers as $key => $value) {
             $headers[] = $key.':'.$value;
         }
@@ -325,6 +338,7 @@ class Curl
     {
         $output = curl_exec($this->ch);
         $this->headers = [];
+        $this->info=curl_getinfo($this->ch);
         $errorCode = curl_errno($this->ch);
         $errorMessage = curl_error($this->ch);
 
@@ -332,7 +346,31 @@ class Curl
             throw new Exception($errorMessage, $errorCode);
         }
 
-        return $output;
+        $header_size = curl_getinfo($this->ch, CURLINFO_HEADER_SIZE);
+
+        $this->responseHeaders = trim(substr($output, 0, $header_size));
+
+        return ltrim($output, $this->responseHeaders);
+    }
+
+    public function getInfo(){
+        return $this->info;
+    }
+
+    public function getCode(){
+       $array = $this->info;
+
+       return $array['http_code'];
+    }
+
+    public function getRequestHeaders(){
+      $array = $this->info;
+
+      return trim($array['request_header']);
+    }
+
+    public function getResponseHeaders(){
+      return $this->responseHeaders;
     }
 
     /**
