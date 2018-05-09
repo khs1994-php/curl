@@ -369,16 +369,12 @@ class Curl
 
     public function getCode()
     {
-        $array = $this->info;
-
-        return $array['http_code'];
+        return curl_getinfo($this->ch, CURLINFO_HTTP_CODE);
     }
 
     public function getRequestHeaders()
     {
-        $array = $this->info;
-
-        return trim($array['request_header']);
+        return trim(curl_getinfo($this->ch, CURLINFO_HEADER_OUT));
     }
 
     public function getResponseHeaders()
