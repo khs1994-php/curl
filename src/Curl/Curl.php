@@ -280,7 +280,7 @@ class Curl
      *
      * @param string $url
      * @param        $data
-     * @param array       $header
+     * @param array  $header
      *
      * @return mixed
      *
@@ -309,7 +309,7 @@ class Curl
      *
      * @param string $url
      * @param        $data
-     * @param array       $header
+     * @param array  $header
      *
      * @return mixed
      *
@@ -336,7 +336,7 @@ class Curl
      *
      * @param string $url
      * @param        $data
-     * @param array       $header
+     * @param array  $header
      *
      * @return mixed
      *
