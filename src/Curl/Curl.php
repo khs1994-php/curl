@@ -280,17 +280,23 @@ class Curl
      *
      * @param string $url
      * @param        $data
+     * @param array       $header
      *
      * @return mixed
      *
      * @throws Exception
      */
-    public function delete(string $url, $data = null)
+    public function delete(string $url, $data = null, array $header = [])
     {
         $this->setUrl($url);
-        /*
-         * HTTP 请求时，使用自定义的 Method 来代替 "GET" 或 "HEAD"。对 "DELETE" 或者其他更隐蔽的 HTTP 请求有用
-         */
+
+        // HTTP 请求时，使用自定义的 Method 来代替 "GET" 或 "HEAD"。对 "DELETE" 或者其他更隐蔽的 HTTP 请求有用
+        if ($header) {
+            foreach ($header as $key => $value) {
+                $this->setHeader($key, $value);
+            }
+        }
+        $this->setHeader(null, null);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'DELETE');
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
         $this->setHeader(null, null);
@@ -303,14 +309,21 @@ class Curl
      *
      * @param string $url
      * @param        $data
+     * @param array       $header
      *
      * @return mixed
      *
      * @throws Exception
      */
-    public function patch(string $url, $data = null)
+    public function patch(string $url, $data = null, array $header = [])
     {
         $this->setUrl($url);
+        if ($header) {
+            foreach ($header as $key => $value) {
+                $this->setHeader($key, $value);
+            }
+        }
+        $this->setHeader(null, null);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'PATCH');
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
         $this->setHeader(null, null);
@@ -323,14 +336,21 @@ class Curl
      *
      * @param string $url
      * @param        $data
+     * @param array       $header
      *
      * @return mixed
      *
      * @throws Exception
      */
-    public function put(string $url, $data = null)
+    public function put(string $url, $data = null, array $header = [])
     {
         $this->setUrl($url);
+        if ($header) {
+            foreach ($header as $key => $value) {
+                $this->setHeader($key, $value);
+            }
+        }
+        $this->setHeader(null, null);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'PUT');
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
         $this->setHeader(null, null);
