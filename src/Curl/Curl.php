@@ -18,7 +18,7 @@ class Curl
 
     private $headers = [];
 
-    private $construct_header = [];
+    private $common_header = [];
 
     private $responseHeaders;
 
@@ -27,9 +27,9 @@ class Curl
      *
      * @param string|null $url
      * @param bool        $http2
-     * @param array       $header
+     * @param array       $common_header
      */
-    public function __construct(string $url = null, bool $http2 = false, array $header = [])
+    public function __construct(string $url = null, bool $http2 = false, array $common_header = [])
     {
         $this->ch = curl_init();
         $this->setUrl($url);
@@ -56,9 +56,13 @@ class Curl
             $this->setOpt(CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
         }
 
-        if ($header) {
-            $this->construct_header = $header;
-            $this->setHeader(null, null);
+        if ($common_header) {
+            $this->common_header = $common_header;
+
+            foreach ($common_header as $k => $v) {
+                $this->headers[$k] = $v;
+
+            }
         }
     }
 
@@ -156,21 +160,9 @@ class Curl
      */
     public function setHeader(?string $name, ?string $value): void
     {
-        $this->headers[$name] = $value;
-
-        $construct_header = $this->construct_header;
-
-        if ($construct_header) {
-            foreach ($construct_header as $k => $v) {
-                $this->headers[$k] = $v;
-            }
-        }
-
         $headers = [];
 
-        if (!$this->headers) {
-            return;
-        }
+        $this->headers[$name] = $value;
 
         foreach ($this->headers as $key => $value) {
             $headers[] = $key.':'.$value;
@@ -239,10 +231,9 @@ class Curl
             foreach ($header as $key => $value) {
                 $this->setHeader($key, $value);
             }
+        } else {
+            $this->setHeader(null, null);
         }
-
-        $this->setHeader(null, null);
-
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'GET');
 
         return $this->exec();
@@ -266,8 +257,10 @@ class Curl
             foreach ($header as $key => $value) {
                 $this->setHeader($key, $value);
             }
+        } else {
+            $this->setHeader(null, null);
         }
-        $this->setHeader(null, null);
+
         $this->setOpt(CURLOPT_POST, 1);
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'POST');
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
@@ -295,8 +288,10 @@ class Curl
             foreach ($header as $key => $value) {
                 $this->setHeader($key, $value);
             }
+        } else {
+            $this->setHeader(null, null);
         }
-        $this->setHeader(null, null);
+
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'DELETE');
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
         $this->setHeader(null, null);
@@ -322,8 +317,10 @@ class Curl
             foreach ($header as $key => $value) {
                 $this->setHeader($key, $value);
             }
+        } else {
+            $this->setHeader(null, null);
         }
-        $this->setHeader(null, null);
+
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'PATCH');
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
         $this->setHeader(null, null);
@@ -349,8 +346,10 @@ class Curl
             foreach ($header as $key => $value) {
                 $this->setHeader($key, $value);
             }
+        } else {
+            $this->setHeader(null, null);
         }
-        $this->setHeader(null, null);
+
         $this->setOpt(CURLOPT_CUSTOMREQUEST, 'PUT');
         $this->setOpt(CURLOPT_POSTFIELDS, $data);
         $this->setHeader(null, null);
@@ -366,7 +365,19 @@ class Curl
     public function exec()
     {
         $output = curl_exec($this->ch);
+
+        // 请求之后清空 header
         $this->headers = [];
+
+        // 载入初始化的 common header
+        $common_header = $this->common_header;
+
+        if ($common_header) {
+            foreach ($common_header as $k => $v) {
+                $this->headers[$k] = $v;
+            }
+        }
+
         $this->info = curl_getinfo($this->ch);
         $errorCode = curl_errno($this->ch);
         $errorMessage = curl_error($this->ch);
