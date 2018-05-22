@@ -390,7 +390,7 @@ class Curl
 
         $this->responseHeaders = trim(substr($output, 0, $header_size));
 
-        return ltrim($output, $this->responseHeaders);
+        return trim(substr($output,$header_size));
     }
 
     public function getInfo()
