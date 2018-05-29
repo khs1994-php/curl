@@ -13,6 +13,8 @@ $ composer require khs1994/curl
 For latest commit version:
 
 ```bash
+$ composer config minimum-stability dev
+
 $ composer require khs1994/curl @dev
 ```
 

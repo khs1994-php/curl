@@ -23,6 +23,13 @@
   "require-dev": {
     "phpunit/phpunit": "~7.0"
   },
+  "config": {
+    "platform": {
+      "php": "7.1.0"
+    },
+    "optimize-autoloader": true,
+    "sort-packages": true
+  },
   "autoload": {
     "psr-4": {
       "Curl\\": "src/Curl/"
@@ -31,6 +38,13 @@
   "autoload-dev": {
     "psr-4": {
       "Curl\\Tests\\": "tests/Curl/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "extra": {
+    "branch-alias": {
+      "dev-master": "18.06-dev"
     }
   }
 }
