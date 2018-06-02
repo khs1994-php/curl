@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Curl;
 
 use Exception;
@@ -61,7 +63,6 @@ class Curl
 
             foreach ($common_header as $k => $v) {
                 $this->headers[$k] = $v;
-
             }
         }
     }
@@ -121,10 +122,10 @@ class Curl
     /**
      * 设置 curl 选项.
      *
-     * @param string $opt
-     * @param        $value
+     * @param int $opt
+     * @param     $value
      */
-    public function setOpt(string $opt, $value): void
+    public function setOpt(int $opt, $value): void
     {
         curl_setopt($this->ch, $opt, $value);
     }
@@ -390,7 +391,7 @@ class Curl
 
         $this->responseHeaders = trim(substr($output, 0, $header_size));
 
-        return trim(substr($output,$header_size));
+        return trim(substr($output, $header_size));
     }
 
     public function getInfo()
