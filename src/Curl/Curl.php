@@ -24,6 +24,8 @@ class Curl
 
     private $responseHeaders;
 
+    private $base_path;
+
     /**
      * 构造函数.
      *
@@ -65,6 +67,14 @@ class Curl
                 $this->headers[$k] = $v;
             }
         }
+    }
+
+    /**
+     * @param mixed $base_path
+     */
+    public function setBasePath($base_path): void
+    {
+        $this->base_path = $base_path;
     }
 
     /**
@@ -173,7 +183,7 @@ class Curl
     {
         if ($url) {
             $this->url = $url;
-            $this->setOpt(CURLOPT_URL, $url);
+            $this->setOpt(CURLOPT_URL, $this->base_path.$url);
         }
 
         return $this->ch;
