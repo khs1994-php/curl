@@ -72,9 +72,11 @@ class Curl
      *
      * @since 7.0.7
      */
-    public function enableHttp2(): void
+    public function enableHttp2()
     {
         $this->setOpt(CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
+
+        return $this->ch;
     }
 
     /**
@@ -82,28 +84,38 @@ class Curl
      *
      * @param string $username
      * @param string $password
+     *
+     * @return Curl
      */
-    public function setHtpasswd(string $username, string $password): void
+    public function setHtpasswd(string $username, string $password)
     {
         $this->setOpt(CURLOPT_USERPWD, $username.':'.$password);
+
+        return $this->ch;
     }
 
     /**
      * 超时设置.
      *
      * @param int $sec
+     *
+     * @return resource
      */
-    public function setTimeout(int $sec): void
+    public function setTimeout(int $sec)
     {
         $this->setOpt(CURLOPT_TIMEOUT, $sec);
+
+        return $this->ch;
     }
 
     /**
      * 设置 User-Agent.
      *
      * @param string $userAgent
+     *
+     * @return resource
      */
-    public function setUserAgent(?string $userAgent): void
+    public function setUserAgent(?string $userAgent)
     {
         /*
          *  在 HTTP 请求中包含一个 "User-Agent: " 头的字符串。
@@ -117,6 +129,8 @@ class Curl
             $userAgent .= ' Curl/'.$curlVersionArray['version'];
             $this->setUserAgent($userAgent);
         }
+
+        return $this->ch;
     }
 
     /**
@@ -124,33 +138,45 @@ class Curl
      *
      * @param int $opt
      * @param     $value
+     *
+     * @return resource
      */
-    public function setOpt(int $opt, $value): void
+    public function setOpt(int $opt, $value)
     {
         curl_setopt($this->ch, $opt, $value);
+
+        return $this->ch;
     }
 
     /**
      * 以数组形式设置 curl.
      *
      * @param array $array
+     *
+     * @return resource
      */
-    public function setOptArray(array $array = []): void
+    public function setOptArray(array $array = [])
     {
         curl_setopt_array($this->ch, $array);
+
+        return $this->ch;
     }
 
     /**
      * 设置 URL.
      *
      * @param string|null $url
+     *
+     * @return resource
      */
-    public function setUrl(string $url = null): void
+    public function setUrl(string $url = null)
     {
         if ($url) {
             $this->url = $url;
             $this->setOpt(CURLOPT_URL, $url);
         }
+
+        return $this->ch;
     }
 
     /**
@@ -158,8 +184,10 @@ class Curl
      *
      * @param string $name
      * @param string $value
+     *
+     * @return resource
      */
-    public function setHeader(?string $name, ?string $value): void
+    public function setHeader(?string $name, ?string $value)
     {
         $headers = [];
 
@@ -170,16 +198,22 @@ class Curl
         }
 
         $this->setOpt(CURLOPT_HTTPHEADER, $headers);
+
+        return $this->ch;
     }
 
     /**
      * 设置 CA 根证书.
      *
      * @param string $ca
+     *
+     * @return resource
      */
-    public function setCAInfo(string $ca): void
+    public function setCAInfo(string $ca)
     {
         $this->setOpt(CURLOPT_CAINFO, $ca);
+
+        return $this->ch;
     }
 
     /**
@@ -187,25 +221,25 @@ class Curl
      *
      * Support Docker Daemon TLS
      *
-     * @param string $cert_path
+     * @param string $cert_path ,must include ca.pem key.pem cert.pem
+     *
+     * @return resource
      */
-    public function docker(string $cert_path): void
+    public function docker(string $cert_path)
     {
-        /*
-         * 下面两个参数为默认值，安全原因，严禁修改此项
-         */
+        // 下面两个参数为默认值，安全原因，严禁修改此项
         $this->setOpt(CURLOPT_SSL_VERIFYPEER, 1);
         $this->setOpt(CURLOPT_SSL_VERIFYHOST, 2);
-        $this->setOpt(CURLOPT_SSL_VERIFYSTATUS, 1);
+        $this->setOpt(CURLOPT_SSL_VERIFYSTATUS, 0);
         $this->setOpt(CURLOPT_CAINFO, $cert_path.'/ca.pem');
-        /*
-         * 一个包含 SSL 私钥的文件名
-         */
+
+        // 一个包含 SSL 私钥的文件名
         $this->setOpt(CURLOPT_SSLKEY, $cert_path.'/key.pem');
-        /*
-         * 一个包含 PEM 格式证书的文件名
-         */
+
+        // 一个包含 PEM 格式证书的文件名
         $this->setOpt(CURLOPT_SSLCERT, $cert_path.'/cert.pem');
+
+        return $this->ch;
     }
 
     public function cookie(): void
