@@ -71,10 +71,14 @@ class Curl
 
     /**
      * @param mixed $base_path
+     *
+     * @return Curl
      */
-    public function setBasePath($base_path): void
+    public function setBasePath($base_path)
     {
         $this->base_path = $base_path;
+
+        return $this;
     }
 
     /**
@@ -86,7 +90,7 @@ class Curl
     {
         $this->setOpt(CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0);
 
-        return $this->ch;
+        return $this;
     }
 
     /**
@@ -101,7 +105,7 @@ class Curl
     {
         $this->setOpt(CURLOPT_USERPWD, $username.':'.$password);
 
-        return $this->ch;
+        return $this;
     }
 
     /**
@@ -109,13 +113,13 @@ class Curl
      *
      * @param int $sec
      *
-     * @return resource
+     * @return Curl
      */
     public function setTimeout(int $sec)
     {
         $this->setOpt(CURLOPT_TIMEOUT, $sec);
 
-        return $this->ch;
+        return $this;
     }
 
     /**
@@ -123,7 +127,7 @@ class Curl
      *
      * @param string $userAgent
      *
-     * @return resource
+     * @return Curl
      */
     public function setUserAgent(?string $userAgent)
     {
@@ -140,7 +144,7 @@ class Curl
             $this->setUserAgent($userAgent);
         }
 
-        return $this->ch;
+        return $this;
     }
 
     /**
@@ -149,13 +153,13 @@ class Curl
      * @param int $opt
      * @param     $value
      *
-     * @return resource
+     * @return Curl
      */
     public function setOpt(int $opt, $value)
     {
         curl_setopt($this->ch, $opt, $value);
 
-        return $this->ch;
+        return $this;
     }
 
     /**
@@ -163,13 +167,13 @@ class Curl
      *
      * @param array $array
      *
-     * @return resource
+     * @return Curl
      */
     public function setOptArray(array $array = [])
     {
         curl_setopt_array($this->ch, $array);
 
-        return $this->ch;
+        return $this;
     }
 
     /**
@@ -177,7 +181,7 @@ class Curl
      *
      * @param string|null $url
      *
-     * @return resource
+     * @return Curl
      */
     public function setUrl(string $url = null)
     {
@@ -186,7 +190,7 @@ class Curl
             $this->setOpt(CURLOPT_URL, $this->base_path.$url);
         }
 
-        return $this->ch;
+        return $this;
     }
 
     /**
@@ -195,7 +199,7 @@ class Curl
      * @param string $name
      * @param string $value
      *
-     * @return resource
+     * @return Curl
      */
     public function setHeader(?string $name, ?string $value)
     {
@@ -209,7 +213,7 @@ class Curl
 
         $this->setOpt(CURLOPT_HTTPHEADER, $headers);
 
-        return $this->ch;
+        return $this;
     }
 
     /**
@@ -217,13 +221,13 @@ class Curl
      *
      * @param string $ca
      *
-     * @return resource
+     * @return Curl
      */
     public function setCAInfo(string $ca)
     {
         $this->setOpt(CURLOPT_CAINFO, $ca);
 
-        return $this->ch;
+        return $this;
     }
 
     /**
@@ -233,7 +237,7 @@ class Curl
      *
      * @param string $cert_path ,must include ca.pem key.pem cert.pem
      *
-     * @return resource
+     * @return Curl
      */
     public function docker(string $cert_path)
     {
@@ -249,7 +253,7 @@ class Curl
         // 一个包含 PEM 格式证书的文件名
         $this->setOpt(CURLOPT_SSLCERT, $cert_path.'/cert.pem');
 
-        return $this->ch;
+        return $this;
     }
 
     public function cookie(): void
