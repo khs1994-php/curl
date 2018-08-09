@@ -16,6 +16,8 @@ class Curl
 
     public $ch;
 
+    public $timeout;
+
     private $info;
 
     private $headers = [];
@@ -118,6 +120,8 @@ class Curl
     public function setTimeout(int $sec)
     {
         $this->setOpt(CURLOPT_TIMEOUT, $sec);
+
+        $this->timeout = $sec;
 
         return $this;
     }
